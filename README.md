@@ -9,7 +9,7 @@ Below you can see the SLAM some experiment results comparing the two strategies,
 </p>
 
 <p align='center'>
-	<img src="ReadMe/indoor_experiment_result.png" alt="center" width="700"/>
+	<img src="ReadMe/indoor_experiment_result.png" alt="center" width="800"/>
 </p>
 <p align='center'>
 	Figure: Mapping results in the Engineering School (UFMG) auditorium hall using: (a) LeGO-LOAM, and (b) EKF-LOAM.
@@ -23,7 +23,7 @@ The localization and mapping strategy of this package is called EKF-LOAM is an a
 </p>
 
 <p align='center'>
-    <img src="ReadMe/ekf_loam.png" alt="drawing" width="400" />
+    <img src="ReadMe/ekf_loam.png" alt="drawing" width="600" />
 </p>
 
 <p style='text-align: justify;'>
@@ -212,7 +212,7 @@ The figure below shows the maps generated with the LiDAR SLAM technique for each
 </p>
 
 <p align='center'>
-    <img src="ReadMe/datasets_maps.png" alt="drawing" width="500" />
+    <img src="ReadMe/datasets_maps.png" alt="drawing" width="800" />
 </p>
 
 <p align='center'> 
