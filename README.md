@@ -211,6 +211,14 @@ Each dataset contains data from the LiLDAR sensor (including the point cloud and
 The figure below shows the maps generated with the LiDAR SLAM technique for each of the datasets.
 </p>
 
+<p align='center'>
+    <img src="ReadMe/datasets_maps.png" alt="drawing" width="500" />
+</p>
+
+<p align='center'> 
+Figure: Maps generated for each of the datasets.
+</p>
+
 ## Report a Bug
 
 To report a bug, send email to gilmarpcruzjunior@gmail.com.
