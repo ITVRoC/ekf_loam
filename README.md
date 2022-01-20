@@ -178,6 +178,39 @@ roslaunch ekf_loam espeleo_lego_loam.launch
 rosbag play *.bag --clock --topic /os1_cloud_node/points /imu/data /odom
 ```
 
+## Datasets
+
+<p style='text-align: justify;'> 
+To test and train the use of the EKF-LOAM package with or without the filter, a set of 6 datasets of some experiments carried out with EspeleoRobô were made available in the [ITV repository](https://drive.google.com/drive/folders/18292dt871h_fiKc7Sc-kdcUcxJtLSDtw?usp=sharing), as listed below:
+</p>
+
+- `control_in_square.bag`: Upper Auditorium of the UFMG School of Engineering;
+- `indoor_follow_wall.bag`: Upper inner courtyard of the UFMG School of Engineering;
+- `two_levels_indoor.bag`: Upper and lower auditorium of the UFMG School of Engineering;
+- `outdoor_rectangle.bag`: Close to the UFMG School Restaurant;
+- `mina_du_veloso.bag`: Mina du Veloso in the city of Ouro Preto, Brazil;
+- `tunnel_sabara.bag`: Deactivated tunnel in the city of Sabará, Brazil.
+
+
+<p style='text-align: justify;'> 
+Each dataset contains data from the LiLDAR sensor (including the point cloud and the internal IMU), the XSense IMU, the angular velocities of each robot wheel and the online wheel odometry. The list of ROS topics included in each dataset is shown below:
+</p>
+
+- `/device1/get_joint_state`: Angular and linear speeds of the EspeleoRobô wheel 1;
+- `/device2/get_joint_state`: Angular and linear speeds of the EspeleoRobô wheel 2;
+- `/device3/get_joint_state`: Angular and linear speeds of the EspeleoRobô wheel 3;
+- `/device4/get_joint_state` : Angular and linear speeds of the EspeleoRobô wheel 4;
+- `/device5/get_joint_state`: Angular and linear speeds of the EspeleoRobô wheel 5; 
+- `/device6/get_joint_state`: Angular and linear speeds of the EspeleoRobô wheel 6; 
+- `/imu/data`: XSense IMU data;
+- `/odom`: Wheel Odometry performed online on the robot;
+- `/os1_cloud_node/points`: LiDAR sensor point cloud;
+- `/os1_cloud_node/imu`: LiDAR sensor internal IMU data.
+
+<p style='text-align: justify;'> 
+The figure below shows the maps generated with the LiDAR SLAM technique for each of the datasets.
+</p>
+
 ## Report a Bug
 
 To report a bug, send email to gilmarpcruzjunior@gmail.com.
