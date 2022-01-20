@@ -9,7 +9,7 @@ Below you can see the SLAM some experiment results comparing the two strategies,
 </p>
 
 <p align='center'>
-	<img src="ReadMe/indoor_experiment_result.png" alt="center" width="800"/>
+	<img src="ReadMe/indoor_experiment_result.png" alt="center" width="1000"/>
 </p>
 <p align='center'>
 	Figure: Mapping results in the Engineering School (UFMG) auditorium hall using: (a) LeGO-LOAM, and (b) EKF-LOAM.
