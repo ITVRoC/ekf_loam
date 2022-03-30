@@ -180,9 +180,8 @@ rosbag play *.bag --clock --topic /os1_cloud_node/points /imu/data /odom
 
 ## Datasets
 
-<p style='text-align: justify;'> 
 To test and train the use of the EKF-LOAM package with or without the filter, a set of 6 datasets of some experiments carried out with EspeleoRobô were made available in the [ITV repository](https://drive.google.com/drive/folders/18292dt871h_fiKc7Sc-kdcUcxJtLSDtw?usp=sharing), as listed below:
-</p>
+
 
 - `control_in_square.bag`: Upper Auditorium of the UFMG School of Engineering;
 - `indoor_follow_wall.bag`: Upper inner courtyard of the UFMG School of Engineering;
