@@ -45,6 +45,10 @@ int imuQueLength;
 
 double mappingProcessInterval;
 
+std::string inertial_frame;
+std::string mapped_frame;
+std::string init_frame;
+
 //-----------------------------
 // LiDAR Mapping class
 //-----------------------------
@@ -418,11 +422,11 @@ public:
         downSizeFilterGlobalMapKeyFrames.setLeafSize(leafsizemap, leafsizemap, leafsizemap); // for global map visualization 
 
         // frame name for TFs
-        odomAftMapped.header.frame_id = "/os1_initial"; 
-        odomAftMapped.child_frame_id = "/aft_mapped";
+        odomAftMapped.header.frame_id = inertial_frame; 
+        odomAftMapped.child_frame_id = mapped_frame;
 
-        aftMappedTrans.frame_id_ = "/os1_initial";
-        aftMappedTrans.child_frame_id_ = "/aft_mapped";
+        aftMappedTrans.frame_id_ = inertial_frame;
+        aftMappedTrans.child_frame_id_ = mapped_frame;
     }
 
     void transformAssociateToMap(){
@@ -759,7 +763,7 @@ public:
             sensor_msgs::PointCloud2 cloudMsgTemp;
             pcl::toROSMsg(*cloudKeyPoses3D, cloudMsgTemp);
             cloudMsgTemp.header.stamp = ros::Time().fromSec(timeLaserOdometry);
-            cloudMsgTemp.header.frame_id = "/os1_initial";
+            cloudMsgTemp.header.frame_id = inertial_frame;
             pubKeyPoses.publish(cloudMsgTemp);
         }
 
@@ -767,7 +771,7 @@ public:
             sensor_msgs::PointCloud2 cloudMsgTemp;
             pcl::toROSMsg(*laserCloudSurfFromMapDS, cloudMsgTemp);
             cloudMsgTemp.header.stamp = ros::Time().fromSec(timeLaserOdometry);
-            cloudMsgTemp.header.frame_id = "/os1_initial";
+            cloudMsgTemp.header.frame_id = inertial_frame;
             pubRecentKeyFrames.publish(cloudMsgTemp);
         }
     }
@@ -845,7 +849,7 @@ public:
         // transform pointcloud
         while (tf_read == 0){
             try{
-                listener.lookupTransform("/os1_init", "/os1_initial", ros::Time(0), pose);
+                listener.lookupTransform(init_frame, inertial_frame, ros::Time(0), pose);
                 tf_read = 1;
             }
             catch (tf::TransformException ex){
@@ -858,7 +862,7 @@ public:
         sensor_msgs::PointCloud2 cloudMsgTemp;
         pcl::toROSMsg(*globalMapKeyFramesDS0, cloudMsgTemp);
         cloudMsgTemp.header.stamp = ros::Time().fromSec(timeLaserOdometry);
-        cloudMsgTemp.header.frame_id = "/os1_init";
+        cloudMsgTemp.header.frame_id = init_frame;
         pubLaserCloudSurround.publish(cloudMsgTemp);  
 
         // End time processing pointcloud
@@ -939,7 +943,7 @@ public:
             sensor_msgs::PointCloud2 cloudMsgTemp;
             pcl::toROSMsg(*nearHistorySurfKeyFrameCloudDS, cloudMsgTemp);
             cloudMsgTemp.header.stamp = ros::Time().fromSec(timeLaserOdometry);
-            cloudMsgTemp.header.frame_id = "/os1_initial";
+            cloudMsgTemp.header.frame_id = inertial_frame;
             pubHistoryKeyFrames.publish(cloudMsgTemp);
         }
 
@@ -987,7 +991,7 @@ public:
             sensor_msgs::PointCloud2 cloudMsgTemp;
             pcl::toROSMsg(*closed_cloud, cloudMsgTemp);
             cloudMsgTemp.header.stamp = ros::Time().fromSec(timeLaserOdometry);
-            cloudMsgTemp.header.frame_id = "/os1_initial";
+            cloudMsgTemp.header.frame_id = inertial_frame;
             pubIcpKeyFrames.publish(cloudMsgTemp);
         }   
         /*
@@ -1646,6 +1650,11 @@ int main(int argc, char** argv)
         nh_.param("/ekf_loam/enableFilter", enableFilter, false);
         nh_.param("/ekf_loam/mappingProcessInterval", mappingProcessInterval, double(0.1));
         nh_.param("/ekf_loam/imuQueLength", imuQueLength, int(100));
+
+	nh_.param("/ekf_loam/inertial_frame", inertial_frame, std::string("os1_initial"));
+	nh_.param("/ekf_loam/mapped_frame", mapped_frame, std::string("aft_mapped"));
+	nh_.param("/ekf_loam/init_frame", init_frame, std::string("os1_init"));
+
     }
     catch (int e)
     {

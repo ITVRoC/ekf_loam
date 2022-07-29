@@ -19,6 +19,9 @@ std::string direction;
 Eigen::Matrix3d Ro;
 Eigen::MatrixXd Ho(4,4), H1(4,4), H2(4,4), H(4,4);
 
+std::string inertial_frame;
+std::string chassis_frame;
+
 class TransformOdometry{
 
 private:
@@ -95,7 +98,7 @@ public:
         if (direction=="foward"){
             H = H1*Ho*H1.inverse();
             childFrameId = "/lidarFilterIn";
-            frameId = "/os1_initial";
+            frameId = inertial_frame;
             odometryOut.header.stamp = odometryMsg->header.stamp;
 
             // covariance
@@ -109,7 +112,7 @@ public:
         }else if (direction=="back"){
             H = H2*Ho*H2.inverse();
             childFrameId = "/lidarFilterOut";
-            frameId = "/chassis_init";
+            frameId = chassis_frame;
 
             // covariance
             odometryOut.header.stamp = ros::Time::now();
@@ -148,9 +151,12 @@ int main (int argc, char **argv)
     
     ROS_INFO("\033[1;32m---->\033[0m Odometry Transform Started.");
 
+    ros::NodeHandle nh_; 
     try
     {
         direction = argv[1];
+        nh_.param("/ekf_loam/inertial_frame", inertial_frame, std::string("os1_initial"));
+        nh_.param("/ekf_loam/chassis_frame", chassis_frame, std::string("chassis_init"));
     }
     catch (int e)
     {

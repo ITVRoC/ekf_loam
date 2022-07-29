@@ -7,28 +7,30 @@
 
     <!--- param -->
     <rosparam command="load" file="$(find ekf_loam)/config/ekf_loam_parameters.yaml" /> 
-    <rosparam command="load" file="$(find ekf_loam)/config/os1_16_parameters.yaml" />
+    <rosparam command="load" file="$(find ekf_loam)/config/velodyne_32_parameters.yaml" />
     <rosparam command="load" file="$(find adaptive_filter)/config/adaptive_filter_parameters.yaml" />
 
     <!-- TFs -->
     <include file="$(find ekf_loam)/launch/ekf_loam_tf.launch" />  
 
-    <!-- odom -->
+    <!-- odom 
     <node pkg="espeleo_locomotion" type="odom.py" name="odom" output="screen" /> 
-    <rosparam file="$(find espeleo_locomotion)/config/locomotion_parameters.yaml" command="load" ns=""/>  
+    <rosparam file="$(find espeleo_locomotion)/config/locomotion_parameters.yaml" command="load" ns=""/>   -->
 
     <!--- EKF-LOAM --> 
     <node pkg="ekf_loam" 
           type="PreTreatment"    
           name="PreTreatment"    
           output="screen">
-	<!--<remap from="/os1_cloud_node/points" to="/velodyne/points2"/> -->
-        <remap from="/os1_cloud_node/points" to="/os1_cloud_node/points"/> 
+	<remap from="/os1_cloud_node/points" to="/velodyne_points"/>
+	<!--remap from="os1_lidar" to="velodyne"/-->
+        <!--<remap from="/os1_cloud_node/points" to="/os1_cloud_node/points"/--> 
     </node>
     <node pkg="ekf_loam" 
           type="LiDAROdometry" 
           name="LiDAROdometry" 
           output="screen">
+	<!--remap from="/imu/data" to="an_device/Imu"-->
     </node> 
     <node pkg="adaptive_filter" 
           type="EKFAdaptiveFilter"     
@@ -51,6 +53,7 @@
           type="LiDARMapping"     
           name="LiDARMapping"     
           output="screen">
+	<!--remap from="/imu/data" to="/an_device/Imu"/-->
     </node>    
     <node pkg="ekf_loam" 
           type="IntegrationTransform"    

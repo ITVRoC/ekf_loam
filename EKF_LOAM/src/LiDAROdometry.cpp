@@ -38,6 +38,10 @@ int surfLessDiv;
 
 int imuQueLength;
 
+std::string inertial_frame;
+std::string odom_frame;
+std::string integrated_frame;
+
 // covariance
 Eigen::MatrixXd P(6,6);
 Eigen::MatrixXd H(6,6);
@@ -373,11 +377,11 @@ public:
         kdtreeCornerLast.reset(new pcl::KdTreeFLANN<PointType>());
         kdtreeSurfLast.reset(new pcl::KdTreeFLANN<PointType>());
 
-        laserOdometry.header.frame_id = "/os1_initial"; 
-        laserOdometry.child_frame_id = "/os1_odom"; 
+        laserOdometry.header.frame_id = inertial_frame; 
+        laserOdometry.child_frame_id = odom_frame; 
 
-        laserOdometryTrans.frame_id_ = "/os1_initial";
-        laserOdometryTrans.child_frame_id_ = "/os1_odom";
+        laserOdometryTrans.frame_id_ = inertial_frame;
+        laserOdometryTrans.child_frame_id_ = odom_frame;
         
         isDegenerate = false;
         matP = cv::Mat(6, 6, CV_32F, cv::Scalar::all(0));
@@ -960,28 +964,28 @@ public:
 	    if (pubCornerPointsSharp.getNumSubscribers() != 0){
 	        pcl::toROSMsg(*cornerPointsSharp, laserCloudOutMsg);
 	        laserCloudOutMsg.header.stamp = cloudHeader.stamp;
-	        laserCloudOutMsg.header.frame_id = "/os1_integrated_odom";
+	        laserCloudOutMsg.header.frame_id = integrated_frame;
 	        pubCornerPointsSharp.publish(laserCloudOutMsg);
 	    }
 
 	    if (pubCornerPointsLessSharp.getNumSubscribers() != 0){
 	        pcl::toROSMsg(*cornerPointsLessSharp, laserCloudOutMsg);
 	        laserCloudOutMsg.header.stamp = cloudHeader.stamp;
-	        laserCloudOutMsg.header.frame_id = "/os1_integrated_odom";
+	        laserCloudOutMsg.header.frame_id = integrated_frame;
 	        pubCornerPointsLessSharp.publish(laserCloudOutMsg);
 	    }
 
 	    if (pubSurfPointsFlat.getNumSubscribers() != 0){
 	        pcl::toROSMsg(*surfPointsFlat, laserCloudOutMsg);
 	        laserCloudOutMsg.header.stamp = cloudHeader.stamp;
-	        laserCloudOutMsg.header.frame_id = "/os1_integrated_odom";
+	        laserCloudOutMsg.header.frame_id = integrated_frame;
 	        pubSurfPointsFlat.publish(laserCloudOutMsg);
 	    }
 
 	    if (pubSurfPointsLessFlat.getNumSubscribers() != 0){
 	        pcl::toROSMsg(*surfPointsLessFlat, laserCloudOutMsg);
 	        laserCloudOutMsg.header.stamp = cloudHeader.stamp;
-	        laserCloudOutMsg.header.frame_id = "/os1_integrated_odom";
+	        laserCloudOutMsg.header.frame_id = integrated_frame;
 	        pubSurfPointsLessFlat.publish(laserCloudOutMsg);
 	    }
     }
@@ -1744,13 +1748,13 @@ public:
         sensor_msgs::PointCloud2 laserCloudCornerLast2;
         pcl::toROSMsg(*laserCloudCornerLast, laserCloudCornerLast2);
         laserCloudCornerLast2.header.stamp = cloudHeader.stamp;
-        laserCloudCornerLast2.header.frame_id = "/os1_integrated_odom";
+        laserCloudCornerLast2.header.frame_id = integrated_frame;
         pubLaserCloudCornerLast.publish(laserCloudCornerLast2);
 
         sensor_msgs::PointCloud2 laserCloudSurfLast2;
         pcl::toROSMsg(*laserCloudSurfLast, laserCloudSurfLast2);
         laserCloudSurfLast2.header.stamp = cloudHeader.stamp;
-        laserCloudSurfLast2.header.frame_id = "/os1_integrated_odom";
+        laserCloudSurfLast2.header.frame_id = integrated_frame;
         pubLaserCloudSurfLast.publish(laserCloudSurfLast2);
 
         transformSum[0] += imuPitchStart;
@@ -1986,19 +1990,19 @@ public:
             sensor_msgs::PointCloud2 outlierCloudLast2;
             pcl::toROSMsg(*outlierCloud, outlierCloudLast2);
             outlierCloudLast2.header.stamp = cloudHeader.stamp;
-            outlierCloudLast2.header.frame_id = "/os1_integrated_odom";
+            outlierCloudLast2.header.frame_id = integrated_frame;
             pubOutlierCloudLast.publish(outlierCloudLast2);
 
             sensor_msgs::PointCloud2 laserCloudCornerLast2;
             pcl::toROSMsg(*laserCloudCornerLast, laserCloudCornerLast2);
             laserCloudCornerLast2.header.stamp = cloudHeader.stamp;
-            laserCloudCornerLast2.header.frame_id = "/os1_integrated_odom";
+            laserCloudCornerLast2.header.frame_id = integrated_frame;
             pubLaserCloudCornerLast.publish(laserCloudCornerLast2);
 
             sensor_msgs::PointCloud2 laserCloudSurfLast2;
             pcl::toROSMsg(*laserCloudSurfLast, laserCloudSurfLast2);
             laserCloudSurfLast2.header.stamp = cloudHeader.stamp;
-            laserCloudSurfLast2.header.frame_id = "/os1_integrated_odom";
+            laserCloudSurfLast2.header.frame_id = integrated_frame;
             pubLaserCloudSurfLast.publish(laserCloudSurfLast2);
 
             // print feature number
@@ -2100,6 +2104,11 @@ int main(int argc, char** argv)
         nh_.param("/ekf_loam/cornerLessDiv", cornerLessDiv, int(1));
         nh_.param("/ekf_loam/surfDiv", surfDiv, int(1));
         nh_.param("/ekf_loam/surfLessDiv", surfLessDiv, int(1));
+
+	nh_.param("/ekf_loam/inertial_frame", inertial_frame, std::string("/os1_initial"));
+	nh_.param("/ekf_loam/odom_frame", odom_frame, std::string("/os1_odom"));
+	nh_.param("/ekf_loam/surfLessDiv", integrated_frame, std::string(integrated_frame));
+
         nh_.param("/sensor_parameters/H_SCAN", H_SCAN, int(1024));
         nh_.param("/sensor_parameters/V_SCAN", V_SCAN, int(16));
     }
