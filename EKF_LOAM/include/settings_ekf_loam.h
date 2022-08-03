@@ -23,7 +23,8 @@
 
 #include "cloud_msgs/cloud_info.h"
 
-#include <opencv/cv.h>
+// #include <opencv/cv.h>
+#include <opencv2/opencv.hpp>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -106,7 +107,7 @@ struct PointXYZIR
 POINT_CLOUD_REGISTER_POINT_STRUCT (PointXYZIR,  
                                    (float, x, x) (float, y, y)
                                    (float, z, z) (float, intensity, intensity)
-                                   (uint16_t, ring, ring)
+                                   (std::uint16_t, ring, ring)
 )
 
 /*

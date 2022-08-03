@@ -25,6 +25,20 @@ std::string filterFreq;
 
 std::mutex mtx; 
 
+std::vector<double> wx1;
+std::vector<double> wy1;
+std::vector<double> wz1;
+std::vector<double> wroll1;
+std::vector<double> wpitch1;
+std::vector<double> wyaw1;
+
+std::vector<double> wx2;
+std::vector<double> wy2;
+std::vector<double> wz2;
+std::vector<double> wroll2;
+std::vector<double> wpitch2;
+std::vector<double> wyaw2;
+
 //-----------------------------
 // LiDAR Odometry class
 //-----------------------------
@@ -105,6 +119,20 @@ private:
     double nCorner, nSurf; 
     double Gx, Gy, Gz, Gphi, Gtheta, Gpsi;
     float l_min;
+
+    // nfn
+    double wx[2][32];
+    double wy[2][32];
+    double wz[2][32];
+    double wroll[2][32];
+    double wpitch[2][32];
+    double wyaw[2][32];
+
+    int nE, mFP;
+    double xmin[2];
+    double xmax[2];
+    double delta[2];
+    double bs[2][32];  
 
 public:
     AdaptiveFilter():
@@ -224,8 +252,43 @@ public:
         Gphi = 0.0052;  // theta [rad]
         Gtheta = 0.005; // psi [rad]
 
-        l_min = 0.005;    
+        l_min = 0.005;
 
+        // nfn
+        mFP = 32;
+        nE = 2;
+        for (int j = 0; j < mFP; ++j){
+            wx[0][j] = wx1[j];
+            wx[1][j] = wx2[j];
+
+            wy[0][j] = wy1[j];
+            wy[1][j] = wy2[j];
+
+            wz[0][j] = wz1[j];
+            wz[1][j] = wz2[j];
+
+            wroll[0][j] = wroll1[j];
+            wroll[1][j] = wroll2[j];
+
+            wpitch[0][j] = wpitch1[j];
+            wpitch[1][j] = wpitch2[j];
+
+            wyaw[0][j] = wyaw1[j];
+            wyaw[1][j] = wyaw2[j];
+        }
+
+        xmin[0] = 1.0;
+        xmin[1] = 1.0;
+        xmax[0] = 500.0;
+        xmax[1] = 3500.0; 
+        delta[0] = (xmin[0] - xmax[0])/double(mFP - 1);
+        delta[1] = (xmin[1] - xmax[1])/double(mFP - 1);
+
+        for (size_t j = 0; j < mFP; j++){
+            for (size_t i = 0; i < nE; i++){
+                bs[i][j] = xmin[i]/delta[i] + j;
+            }            
+        }
     }
 
     MatrixXd adaptive_covariance(double fCorner, double fSurf){
@@ -249,6 +312,67 @@ public:
         Q(3,3) = c*Gphi*cov_phi;
         Q(4,4) = b*Gtheta*cov_theta;
         Q(5,5) = c*Gpsi*cov_psi;
+
+        return Q;
+    }
+
+    double nfn(double x[], double w[][32]){
+        int ki[nE], kii[nE];
+        double miki[nE], mikii[nE], yi[nE];
+        double ys, aux_int;
+
+        for (size_t k = 0; k < nE; k++){
+            if (x[k] <= xmin[k]){
+                ki[k] = 1;
+                kii[k] = ki[k] + 1;
+                miki[k] = 1;
+                mikii[k] = 0;
+            }else if (x[k] >= xmax[k]){
+                ki[k] = mFP-1;
+                kii[k] = ki[k] + 1;
+                miki[k] = 0;
+                mikii[k] = 1;
+            }else{
+                double aux = modf ((x[k]-xmin[k])/delta[k], &aux_int);
+                ki[k] = int (aux_int + 1);
+                kii[k] = ki[k] + 1;
+                miki[k] = (-1/delta[k])*x[k] + bs[k][int(ki[k])];
+                mikii[k] = 1 - miki[k];
+            }
+            
+            yi[k] = miki[k]*w[k][int(ki[k])] + mikii[k]*w[k][int(kii[k])];
+        } 
+        
+    
+        // output
+        ys = 0;
+        for (size_t i = 0; i < nE; i++){
+            ys = std::max(ys + yi[i],0.0) + 1e-7;
+        }
+
+        return ys;        
+    }
+
+    MatrixXd nfn_adaptive_covariance(double fCorner, double fSurf){
+        Eigen::MatrixXd Q(6,6);
+        double cov_x, cov_y, cov_z, cov_phi, cov_psi, cov_theta;
+
+        double x[2] = {fCorner, fSurf};
+
+        cov_x = nfn(x, wx);
+        cov_y = nfn(x, wy);
+        cov_z = nfn(x, wz);
+        cov_phi = nfn(x, wroll);
+        cov_theta = nfn(x, wpitch);
+        cov_psi = nfn(x, wyaw);
+
+        Q = Eigen::MatrixXd::Identity(6,6);
+        Q(0,0) = cov_x;
+        Q(1,1) = cov_y;
+        Q(2,2) = cov_z;
+        Q(3,3) = cov_phi;
+        Q(4,4) = cov_theta;
+        Q(5,5) = cov_psi;
 
         return Q;
     }
@@ -532,11 +656,11 @@ public:
                                 imuIn->orientation_covariance[3], imuIn->orientation_covariance[4], imuIn->orientation_covariance[5],
                                 imuIn->orientation_covariance[6], imuIn->orientation_covariance[7], imuIn->orientation_covariance[8];
 
-        E_imu.block(6,6,3,3) = 0.01*E_imu.block(6,6,3,3);
+        E_imu.block(6,6,3,3) = 0.01*E_imu.block(3,3,3,3);
 
         // time
         imu_dt = imuTimeCurrent - imuTimeLast;
-        imu_dt = 0.01;
+        // imu_dt = 0.01;
 
         // header
         double timediff = ros::Time::now().toSec() - timeL + imuTimeCurrent;
@@ -563,12 +687,12 @@ public:
         wheelMeasure << 1.0*wheelOdometry->twist.twist.linear.x, wheelOdometry->twist.twist.angular.z;
 
         // covariance
-        E_wheel(0,0) = 0.1*wheelOdometry->twist.covariance[0];
+        E_wheel(0,0) = 0.01*wheelOdometry->twist.covariance[0];
         E_wheel(1,1) = 100*wheelOdometry->twist.covariance[35];
 
         // time
         wheel_dt = wheelTimeCurrent - wheelTimeLast;
-        wheel_dt = 0.05;
+        // wheel_dt = 0.05;
 
         // header
         double timediff = ros::Time::now().toSec() - timeL + wheelTimeCurrent;
@@ -603,11 +727,12 @@ public:
         double corner = double(laserOdometry->twist.twist.linear.x);
         double surf = double(laserOdometry->twist.twist.angular.x); 
 
-        E_lidar = adaptive_covariance(corner, surf);
+        // E_lidar = adaptive_covariance(corner, surf);
+        E_lidar = nfn_adaptive_covariance(corner, surf);
 
         // time
         lidar_dt = lidarTimeCurrent - lidarTimeLast;
-        lidar_dt = 0.1;
+        // lidar_dt = 0.1;
 
         // header
         double timediff = ros::Time::now().toSec() - timeL + lidarTimeCurrent;
@@ -795,6 +920,21 @@ int main(int argc, char** argv)
         nh_.param("/adaptive_filter/enableWheel", enableWheel, false);
         nh_.param("/adaptive_filter/enableLidar", enableLidar, false);
         nh_.param("/adaptive_filter/filterFreq", filterFreq, std::string("l"));
+
+        //nfn
+        nh_.getParam("/nfn/wx1", wx1);
+        nh_.getParam("/nfn/wx2", wx2);
+        nh_.getParam("/nfn/wy1", wy1);
+        nh_.getParam("/nfn/wy2", wy2);
+        nh_.getParam("/nfn/wz1", wz1);
+        nh_.getParam("/nfn/wz2", wz2);
+        nh_.getParam("/nfn/wroll1", wroll1);
+        nh_.getParam("/nfn/wroll2", wroll2);
+        nh_.getParam("/nfn/wpitch1", wpitch1);
+        nh_.getParam("/nfn/wpitch2", wpitch2);
+        nh_.getParam("/nfn/wyaw1", wyaw1);
+        nh_.getParam("/nfn/wyaw2", wyaw2);
+
     }
     catch (int e)
     {

@@ -1,4 +1,4 @@
-# EKF-LOAM
+cd # EKF-LOAM
 
 <p style='text-align: justify;'>
 EKF-LOAM (Extended Kalman Filter - LiDAR Odometry And Mapping), is an update of the LeGO-LOAM (LightWeight and Ground Optimized - LOAM) algorithm (https://github.com/RobustFieldAutonomyLab/LeGO-LOAM.), designed to handle robot path over/underestimation in environments with few geometric features. This new solution proposes a sensor fusion strategy that merges information from wheel odometry, IMU and LiDAR odometry estimation, which uses an adaptive covariance scheme that is defined according to the number of identified geometric features in the environment.
@@ -9,7 +9,7 @@ Below you can see the SLAM some experiment results comparing the two strategies,
 </p>
 
 <p align='center'>
-	<img src="ReadMe/indoor_experiment_result.png" alt="center" width="1000"/>
+	<img src="ReadMe/indoor_experiment_result.png" alt="center" width="700"/>
 </p>
 <p align='center'>
 	Figure: Mapping results in the Engineering School (UFMG) auditorium hall using: (a) LeGO-LOAM, and (b) EKF-LOAM.
@@ -23,7 +23,7 @@ The localization and mapping strategy of this package is called EKF-LOAM is an a
 </p>
 
 <p align='center'>
-    <img src="ReadMe/ekf_loam.png" alt="drawing" width="600" />
+    <img src="ReadMe/ekf_loam.png" alt="drawing" width="400" />
 </p>
 
 <p style='text-align: justify;'>
@@ -59,6 +59,33 @@ catkin_make ekf_loam -j1
 When you compile the code for the first time, you need to add "-j1" behind "catkin_make" for generating some message types. "-j1" is not needed for future compiling.
 </p>
 
+### Note:
+<p style='text-align: justify;'>
+If you are using Ubuntu 20.04 with ROS Noetic and if you have an error in voxel_grid.h, e.g. Eigen::Index is not a member of Eigen, modify /usr/include/pcl-1.10/pcl/filters/voxel_grid.h at line 340 and line 669.
+
+Original:
+</p>
+```
+for (Eigen::Index ni = 0; ni < relative_coordinates.cols (); ni++)
+```
+<p style='text-align: justify;'>
+Change to:
+</p>
+
+```
+for (int ni = 0; ni < relative_coordinates.cols (); ni++) 
+```
+
+If you have em error in LiDARMapping.cpp, install this package: 
+```
+sudo apt-get install libparmetis-dev
+```
+
+Another possible erro is fix comment the line 21 in the file /usr/include/tbb/task_scheduler_init.h.
+
+```
+//#pragma message("TBB Warning: tbb/task_scheduler_init.h is de//precated. For details, please see Deprecated Features appendix in the TBB reference manual.")
+```
 ## Parameters
 
 <p style='text-align: justify;'> 
@@ -180,8 +207,9 @@ rosbag play *.bag --clock --topic /os1_cloud_node/points /imu/data /odom
 
 ## Datasets
 
+<p style='text-align: justify;'> 
 To test and train the use of the EKF-LOAM package with or without the filter, a set of 6 datasets of some experiments carried out with EspeleoRobô were made available in the [ITV repository](https://drive.google.com/drive/folders/18292dt871h_fiKc7Sc-kdcUcxJtLSDtw?usp=sharing), as listed below:
-
+</p>
 
 - `control_in_square.bag`: Upper Auditorium of the UFMG School of Engineering;
 - `indoor_follow_wall.bag`: Upper inner courtyard of the UFMG School of Engineering;
@@ -211,7 +239,7 @@ The figure below shows the maps generated with the LiDAR SLAM technique for each
 </p>
 
 <p align='center'>
-    <img src="ReadMe/datasets_maps.png" alt="drawing" width="800" />
+    <img src="ReadMe/datasets_maps.png" alt="drawing" width="500" />
 </p>
 
 <p align='center'> 

@@ -36,7 +36,6 @@
           args   = "$0 0 0.0358 0 0 1 0 os1_sensor os1_lidar 200" 
 	  output = "screen">
     </node> 
-
     <node if="$(arg sim)"
 	  pkg    = "tf" 
           type   = "static_transform_publisher" 
@@ -44,7 +43,6 @@
           args   = "$0 0 0.0358 0 0 0 1 os1_sensor os1_lidar 200" 
 	  output = "screen">
     </node>  
-
     <node if="$(arg sim)"
 	  pkg    = "tf" 
           type   = "static_transform_publisher" 
@@ -52,7 +50,6 @@
           args   = "0 0 0 0 0 0 1 os1_lidar velodyneVPL_16 200"
 	  output = "screen" > 
     </node> 
-
     <node pkg    = "tf" 
           type   = "static_transform_publisher" 
           name   = "velodyne_to_lidar"  

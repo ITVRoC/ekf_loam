@@ -1651,9 +1651,9 @@ int main(int argc, char** argv)
         nh_.param("/ekf_loam/mappingProcessInterval", mappingProcessInterval, double(0.1));
         nh_.param("/ekf_loam/imuQueLength", imuQueLength, int(100));
 
-	nh_.param("/ekf_loam/inertial_frame", inertial_frame, std::string("os1_initial"));
-	nh_.param("/ekf_loam/mapped_frame", mapped_frame, std::string("aft_mapped"));
-	nh_.param("/ekf_loam/init_frame", init_frame, std::string("os1_init"));
+        nh_.param("/ekf_loam/inertial_frame", inertial_frame, std::string("os1_initial"));
+        nh_.param("/ekf_loam/mapped_frame", mapped_frame, std::string("aft_mapped"));
+        nh_.param("/ekf_loam/init_frame", init_frame, std::string("os1_init"));
 
     }
     catch (int e)
