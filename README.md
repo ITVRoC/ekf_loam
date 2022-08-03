@@ -65,6 +65,7 @@ If you are using Ubuntu 20.04 with ROS Noetic and if you have an error in voxel_
 
 Original:
 </p>
+
 ```
 for (Eigen::Index ni = 0; ni < relative_coordinates.cols (); ni++)
 ```
@@ -84,7 +85,7 @@ sudo apt-get install libparmetis-dev
 Another possible erro is fix comment the line 21 in the file /usr/include/tbb/task_scheduler_init.h.
 
 ```
-//#pragma message("TBB Warning: tbb/task_scheduler_init.h is de//precated. For details, please see Deprecated Features appendix in the TBB reference manual.")
+//#pragma message("TBB Warning: tbb/task_scheduler_init.h is deprecated. For details, please see Deprecated Features appendix in the TBB reference manual.")
 ```
 ## Parameters
 
