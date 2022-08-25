@@ -1,4 +1,4 @@
-cd # EKF-LOAM
+# EKF-LOAM
 
 <p style='text-align: justify;'>
 EKF-LOAM (Extended Kalman Filter - LiDAR Odometry And Mapping), is an update of the LeGO-LOAM (LightWeight and Ground Optimized - LOAM) algorithm (https://github.com/RobustFieldAutonomyLab/LeGO-LOAM.), designed to handle robot path over/underestimation in environments with few geometric features. This new solution proposes a sensor fusion strategy that merges information from wheel odometry, IMU and LiDAR odometry estimation, which uses an adaptive covariance scheme that is defined according to the number of identified geometric features in the environment.
