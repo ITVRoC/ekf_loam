@@ -77,7 +77,7 @@ Change to:
 for (int ni = 0; ni < relative_coordinates.cols (); ni++) 
 ```
 
-If you have em error in LiDARMapping.cpp, install this package: 
+If you have an error in LiDARMapping.cpp, install this package: 
 ```
 sudo apt-get install libparmetis-dev
 ```
