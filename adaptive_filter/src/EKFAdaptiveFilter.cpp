@@ -21,6 +21,10 @@ bool enableImu;
 bool enableWheel;
 bool enableLidar;
 
+float lidarG;
+float wheelG;
+float imuG;
+
 std::string filterFreq;
 
 std::mutex mtx; 
@@ -241,8 +245,8 @@ public:
         cov_theta   = (nSurf - min(fSurf,nSurf))/nSurf + l_min;
         
         Q = MatrixXd::Zero(6,6);
-        float b = 2000.0/1.0;
-        float c = 2000.0/1.0;
+        float b = lidarG/1.0;
+        float c = lidarG/1.0;
         Q(0,0) = b*Gx*cov_x;
         Q(1,1) = c*Gy*cov_y;
         Q(2,2) = b*Gz*cov_z;
@@ -532,7 +536,7 @@ public:
                                 imuIn->orientation_covariance[3], imuIn->orientation_covariance[4], imuIn->orientation_covariance[5],
                                 imuIn->orientation_covariance[6], imuIn->orientation_covariance[7], imuIn->orientation_covariance[8];
 
-        E_imu.block(6,6,3,3) = 0.01*E_imu.block(6,6,3,3);
+        E_imu.block(6,6,3,3) = imuG*E_imu.block(6,6,3,3);
 
         // time
         imu_dt = imuTimeCurrent - imuTimeLast;
@@ -563,7 +567,7 @@ public:
         wheelMeasure << 1.0*wheelOdometry->twist.twist.linear.x, wheelOdometry->twist.twist.angular.z;
 
         // covariance
-        E_wheel(0,0) = 0.1*wheelOdometry->twist.covariance[0];
+        E_wheel(0,0) = wheelG*wheelOdometry->twist.covariance[0];
         E_wheel(1,1) = 100*wheelOdometry->twist.covariance[35];
 
         // time
@@ -634,7 +638,7 @@ public:
             }
         
         filteredOdometry.header.frame_id = "chassis_init";
-        filteredOdometry.child_frame_id = "/ekf_odom_frame";
+        filteredOdometry.child_frame_id = "ekf_odom_frame";
 
         geometry_msgs::Quaternion geoQuat = tf::createQuaternionMsgFromRollPitchYaw (X(3), X(4), X(5));
 
@@ -679,7 +683,7 @@ public:
     void publish_indirect_lidar_measurement(VectorXd y, MatrixXd Pi){
         indLiDAROdometry.header = headerL;
         indLiDAROdometry.header.frame_id = "chassis_init";
-        indLiDAROdometry.child_frame_id = "/ind_lidar_frame";
+        indLiDAROdometry.child_frame_id = "ind_lidar_frame";
 
         // twist
         indLiDAROdometry.twist.twist.linear.x = y(0);
@@ -795,6 +799,10 @@ int main(int argc, char** argv)
         nh_.param("/adaptive_filter/enableWheel", enableWheel, false);
         nh_.param("/adaptive_filter/enableLidar", enableLidar, false);
         nh_.param("/adaptive_filter/filterFreq", filterFreq, std::string("l"));
+
+        nh_.param("/adaptive_filter/lidarG", lidarG, float(1000));
+        nh_.param("/adaptive_filter/wheelG", wheelG, float(0.05));
+        nh_.param("/adaptive_filter/imuG", imuG, float(0.1));
     }
     catch (int e)
     {

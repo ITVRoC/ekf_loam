@@ -7,23 +7,27 @@
 
     <!--- param -->
     <rosparam command="load" file="$(find ekf_loam)/config/ekf_loam_parameters.yaml" /> 
-    <rosparam command="load" file="$(find ekf_loam)/config/os1_16_parameters.yaml" />
+    <!--rosparam unless="$(arg sim)" command="load" file="$(find ekf_loam)/config/os1_16_parameters.yaml" /-->
+    <rosparam unless="$(arg sim)" command="load" file="$(find ekf_loam)/config/velodyne_32_parameters.yaml" />
+    <rosparam if="$(arg sim)" command="load" file="$(find ekf_loam)/config/vlp_16_sim_parameters.yaml" />
     <rosparam command="load" file="$(find adaptive_filter)/config/adaptive_filter_parameters.yaml" />
+    <!--rosparam command="load" file="$(find adaptive_filter)/config/nfn_parameters.yaml" /-->
 
     <!-- TFs -->
     <include file="$(find ekf_loam)/launch/ekf_loam_tf.launch" />  
 
-    <!-- odom -->
+    <!-- odom 
     <node pkg="espeleo_locomotion" type="odom.py" name="odom" output="screen" /> 
-    <rosparam file="$(find espeleo_locomotion)/config/locomotion_parameters.yaml" command="load" ns=""/>  
+    <rosparam file="$(find espeleo_locomotion)/config/locomotion_parameters.yaml" command="load" ns=""/>  -->
 
     <!--- EKF-LOAM --> 
     <node pkg="ekf_loam" 
           type="PreTreatment"    
           name="PreTreatment"    
           output="screen">
-	<!--<remap from="/os1_cloud_node/points" to="/velodyne/points2"/> -->
-        <remap from="/os1_cloud_node/points" to="/os1_cloud_node/points"/> 
+	<!--<remap from="/os1_cloud_node/points" to="/velodyne/points2"/> 
+        <remap from="/os1_cloud_node/points" to="/os1_cloud_node/points"/> -->
+        <remap from="/os1_cloud_node/points" to="/velodyne_points"/>
     </node>
     <node pkg="ekf_loam" 
           type="LiDAROdometry" 
@@ -59,6 +63,8 @@
     </node>  
 	
    <!--- Run Rviz  -->
-   <node if="$(arg rviz_p)" pkg="rviz" type="rviz" name="rviz_lidar" args="-d $(find ekf_loam)/rviz/ekf_loam_trajectory.rviz" />  
+   <node if="$(arg rviz_p)" pkg="rviz" type="rviz" name="rviz_lidar" args="-d $(find ekf_loam)/rviz/ekf_loam_trajectory.rviz" /> 
+
+   <!--node pkg="ekf_loam" type="data_register.py" name="data_register" args="coro" output="screen"/-->
 
 </launch>

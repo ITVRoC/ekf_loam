@@ -16,6 +16,12 @@ tf::StampedTransform pose;
 
 bool enableFilter;
 
+std::string init_frame;
+std::string lidar_integrated_frame;
+std::string inertial_frame;
+std::string base_frame;
+std::string integrated_frame;
+
 class IntegrationTransform{
 
 private:
@@ -72,20 +78,20 @@ public:
     }
 
     void initialization(){
-        laserOdometry2.header.frame_id = "/os1_init";     
-        laserOdometry2.child_frame_id = "/lidar_integrated_odom"; 
+        laserOdometry2.header.frame_id = init_frame;     
+        laserOdometry2.child_frame_id = lidar_integrated_frame; 
 
-        laserOdometryTrans2.frame_id_ = "/os1_initial"; 
-        laserOdometryTrans2.child_frame_id_ = "/os1_integrated_odom";
+        laserOdometryTrans2.frame_id_ = inertial_frame; 
+        laserOdometryTrans2.child_frame_id_ = integrated_frame;
 
-        laserOdometryTrans3.frame_id_ = "/os1_init"; 
-        laserOdometryTrans3.child_frame_id_ = "/lidar_integrated_odom";
+        laserOdometryTrans3.frame_id_ = init_frame; 
+        laserOdometryTrans3.child_frame_id_ = lidar_integrated_frame;
 
-        map_2_camera_init_Trans.frame_id_ = "/os1_init";
-        map_2_camera_init_Trans.child_frame_id_ = "/os1_initial";
+        map_2_camera_init_Trans.frame_id_ = init_frame;
+        map_2_camera_init_Trans.child_frame_id_ = inertial_frame;
 
-        camera_2_base_link_Trans.frame_id_ = "/os1_integrated_odom"; 
-        camera_2_base_link_Trans.child_frame_id_ = "/base_link";
+        camera_2_base_link_Trans.frame_id_ = integrated_frame; 
+        camera_2_base_link_Trans.child_frame_id_ = base_frame;
 
         for (int i = 0; i < 6; ++i)
         {
@@ -298,7 +304,14 @@ int main(int argc, char** argv)
     try
     {
         nh_.param("/ekf_loam/enableFilter", enableFilter, false);
-    }
+
+        nh_.param("/ekf_loam/init_frame", init_frame, std::string("os1_init"));
+        nh_.param("/ekf_loam/lidar_integrated_frame", lidar_integrated_frame, std::string("lidar_integrate_odom"));
+        nh_.param("/ekf_loam/integrated_frame", integrated_frame, std::string("os1_integrate_odom"));
+        nh_.param("/ekf_loam/inertial_frame", inertial_frame, std::string("os1_initial"));
+        nh_.param("/ekf_loam/base_frame", base_frame, std::string("base_link"));
+
+        }
     catch (int e)
     {
         ROS_INFO("\033[1;31m---->\033[0m Exception occurred when importing parameters in Integration Transform Node. Exception Nr. %d", e);
@@ -310,7 +323,7 @@ int main(int argc, char** argv)
 
     while (!tf_read){
         try{
-            listener.lookupTransform("/os1_init", "/os1_initial", ros::Time(0), pose);
+            listener.lookupTransform(init_frame, inertial_frame, ros::Time(0), pose);
             tf_read = true;
         }
         catch (tf::TransformException ex){

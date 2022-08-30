@@ -37,6 +37,8 @@ int V_SCAN;
 int segmentValidPointNum;
 int segmentValidLineNum;
 
+std::string lidar_frame;
+
 //-----------------------------
 // Pre-Treatment class
 //-----------------------------
@@ -190,7 +192,7 @@ public:
         if (!tf_read){
             try{
                 std::string frame_cloud = laserCloudMsg->header.frame_id;
-                listener.lookupTransform(frame_cloud, "/os1_sensor", ros::Time(0), pose);
+                listener.lookupTransform(frame_cloud, lidar_frame, ros::Time(0), pose);
                 tf_read = true;
             }
             catch (tf::TransformException ex){
@@ -555,6 +557,7 @@ int main(int argc, char** argv){
     ros::NodeHandle nh_;    
     try
     {
+	    nh_.param("/ekf_loam/lidar_frame", lidar_frame, std::string("os1_sensor"));
         nh_.param("/ekf_loam/segmentThetaValue", segmentThetanum, float(10.0));
         nh_.param("/ekf_loam/sensorMountAngle", sensorMountAngle, float(0.0));
         nh_.param("/ekf_loam/segmentValidPointNum", segmentValidPointNum, int(5));
