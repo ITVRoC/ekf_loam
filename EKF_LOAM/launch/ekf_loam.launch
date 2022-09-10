@@ -1,3 +1,4 @@
+
 <launch>
     
     <!--- Simulate Time Parameters -->    
@@ -11,7 +12,7 @@
     <rosparam unless="$(arg sim)" command="load" file="$(find ekf_loam)/config/velodyne_32_parameters.yaml" />
     <rosparam if="$(arg sim)" command="load" file="$(find ekf_loam)/config/vlp_16_sim_parameters.yaml" />
     <rosparam command="load" file="$(find adaptive_filter)/config/adaptive_filter_parameters.yaml" />
-    <rosparam command="load" file="$(find adaptive_filter)/config/nfn_parameters.yaml" />
+    <!--rosparam command="load" file="$(find adaptive_filter)/config/nfn_parameters.yaml" /-->
 
     <!-- TFs -->
     <include file="$(find ekf_loam)/launch/ekf_loam_tf.launch" />  
