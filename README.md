@@ -170,7 +170,7 @@ To run offline in bag files:
 
 1. Run the launch file:
 ```
-roslaunch ekf_loam espeleo_lego_loam.launch
+roslaunch ekf_loam ekf_loam.launch
 ```
 
 2. Play existing bag files:
