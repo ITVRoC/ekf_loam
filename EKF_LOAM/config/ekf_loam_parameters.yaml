@@ -19,7 +19,7 @@
   imuQueLength: 100                   # Imu queue length
 
   # Filter settings
-  enableFilter: true
+  enableFilter: false
 
   # Segmentation settings
   sensorMountAngle: 0.0
