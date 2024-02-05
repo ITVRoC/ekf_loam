@@ -261,7 +261,7 @@ public:
             thisPoint.y = laserCloudIn->points[i].y;
             thisPoint.z = laserCloudIn->points[i].z;
 
-            if (enableFlatGround && thisPoint.z < -0.0){
+            if (enableFlatGround && thisPoint.z < -0.41){
                 continue;
             }
 
