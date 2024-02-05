@@ -20,6 +20,7 @@
 
   # Filter settings
   enableFilter: false
+  enableFlatGround : true             # enable vertical filter for flat ground
 
   # Segmentation settings
   sensorMountAngle: 0.0
