@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(ekf_loam)
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 find_package(catkin REQUIRED COMPONENTS
@@ -19,7 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   nav_msgs
   cloud_msgs
-  adaptive_filter  
+  adaptive_filter
 )
 
 find_package(Boost REQUIRED COMPONENTS 
@@ -47,7 +47,7 @@ include_directories(
 	${PCL_INCLUDE_DIRS}
 	${OpenCV_INCLUDE_DIRS}
 	${GTSAM_INCLUDE_DIR}
-	${EIGEN3_INCLUDE_DIR}
+  ${EIGEN3_INCLUDE_DIR}
 )
 
 link_directories(
@@ -55,7 +55,7 @@ link_directories(
 	${OpenCV_LIBRARY_DIRS}
 	${PCL_LIBRARY_DIRS}
 	${GTSAM_LIBRARY_DIRS}
-	${EIGEN3_LIBRARY_DIRS}
+  ${EIGEN3_LIBRARY_DIRS}
 )
 
 add_executable(PreTreatment src/PreTreatment.cpp)
@@ -74,3 +74,8 @@ target_link_libraries(IntegrationTransform ${catkin_LIBRARIES} ${PCL_LIBRARIES} 
 
 add_executable(TransformOdometry src/TransformOdometry.cpp)
 target_link_libraries(TransformOdometry ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES} ${Eigen_LIBRARIES})
+
+add_executable(TransformProjected src/TransformProjected.cpp)
+target_link_libraries(TransformProjected ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES} ${Eigen_LIBRARIES})
+
+

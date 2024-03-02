@@ -12,7 +12,6 @@
 #ifndef _UTILITY_LIDAR_ODOMETRY_H_
 #define _UTILITY_LIDAR_ODOMETRY_H_
 
-
 #include <ros/ros.h>
 
 #include <sensor_msgs/Imu.h>
@@ -107,7 +106,7 @@ struct PointXYZIR
 POINT_CLOUD_REGISTER_POINT_STRUCT (PointXYZIR,  
                                    (float, x, x) (float, y, y)
                                    (float, z, z) (float, intensity, intensity)
-                                   (std::uint16_t, ring, ring)
+                                   (uint16_t, ring, ring)
 )
 
 /*
