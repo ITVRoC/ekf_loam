@@ -2105,9 +2105,9 @@ int main(int argc, char** argv)
         nh_.param("/ekf_loam/surfDiv", surfDiv, int(1));
         nh_.param("/ekf_loam/surfLessDiv", surfLessDiv, int(1));
 
-	nh_.param("/ekf_loam/inertial_frame", inertial_frame, std::string("/os1_initial"));
-	nh_.param("/ekf_loam/odom_frame", odom_frame, std::string("/os1_odom"));
-	nh_.param("/ekf_loam/surfLessDiv", integrated_frame, std::string(integrated_frame));
+        nh_.param("/ekf_loam/inertial_frame", inertial_frame, std::string("/os1_initial"));
+        nh_.param("/ekf_loam/odom_frame", odom_frame, std::string("/os1_odom"));
+        nh_.param("/ekf_loam/surfLessDiv", integrated_frame, std::string(integrated_frame));
 
         nh_.param("/sensor_parameters/H_SCAN", H_SCAN, int(1024));
         nh_.param("/sensor_parameters/V_SCAN", V_SCAN, int(16));

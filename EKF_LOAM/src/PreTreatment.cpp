@@ -21,6 +21,7 @@ float segmentThetanum;
 float segmentTheta; 
 float segmentAlphaX;
 float segmentAlphaY;
+bool enableFlatGround;
 
 float opening_vertical_angle;
 float opening_horizon_angle;
@@ -259,6 +260,11 @@ public:
             thisPoint.x = laserCloudIn->points[i].x;
             thisPoint.y = laserCloudIn->points[i].y;
             thisPoint.z = laserCloudIn->points[i].z;
+
+            if (enableFlatGround && thisPoint.z < -0.40){
+                continue;
+            }
+
             // find the row and column index in the iamge for this point
             verticalAngle = atan2(thisPoint.z, sqrt(thisPoint.x * thisPoint.x + thisPoint.y * thisPoint.y)) * 180 / M_PI;
             rowIdn = (verticalAngle + start_angle_v) / ang_res_v;
@@ -562,6 +568,7 @@ int main(int argc, char** argv){
         nh_.param("/ekf_loam/sensorMountAngle", sensorMountAngle, float(0.0));
         nh_.param("/ekf_loam/segmentValidPointNum", segmentValidPointNum, int(5));
         nh_.param("/ekf_loam/segmentValidLineNum", segmentValidLineNum, int(3));
+        nh_.param("/ekf_loam/enableFlatGround", enableFlatGround, bool(false));
 
         nh_.param("/sensor_parameters/H_SCAN", H_SCAN, int(1024));
         nh_.param("/sensor_parameters/V_SCAN", V_SCAN, int(16));

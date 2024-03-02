@@ -2,8 +2,8 @@
  sensor_parameters:
 
   # Sensor settings - OS1-16 Sensor
-  V_SCAN: 32
-  H_SCAN: 1024
+  V_SCAN: 16
+  H_SCAN: 684
   groundScanInd: 7
   opening_vertical_angle: 30.0
   opening_horizon_angle: 360.0
