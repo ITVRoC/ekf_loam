@@ -2,10 +2,10 @@
  ekf_loam:
 
   # Folder to save PCD point cloud
-  fileDirectoryName: "/home/gilmar/catkin_ws/maps/"
+  fileDirectoryName: "/home/gilmar/catkin_ws/maps/capanema/"
 
   # Frames
-  lidar_frame: "velodyne"
+  lidar_frame: "velodyne" # os1_sensor velodyne
   inertial_frame: "os1_initial"
   odom_frame: "os1_odom"
   integrated_frame: "os1_integrated_odom"
@@ -20,6 +20,7 @@
 
   # Filter settings
   enableFilter: true
+  enableFlatGround : false             # enable vertical filter for flat ground
 
   # Segmentation settings
   sensorMountAngle: 0.0
@@ -44,14 +45,14 @@
   nearestFeatureSearchSqDistValue: 25.0   # old value 25
 
   # Loop Clousure settings
-  enableLoopClosure: false             # Enable/Disable [true or false]
+  enableLoopClosure: true             # Enable/Disable [true or false]
   keyframeRadiuns: 7.0                # key frame that is within n meters from current pose will be considerd for loop closure
   keyframeNum: 25                     # 2n+1 number of history key frames will be fused into a submap for loop closure
-  keyframeScore: 0.3                  # the smaller the better alignment - old 0.3  -- filter 0.1
+  keyframeScore: 0.1                  # the smaller the better alignment - old 0.3  -- filter 0.1
 
   # Mapping settings  
   mappingProcessInterval: 0.3                      # Mapping process interval - old 0.1
-  surroundingKeyframeSearchRadiusValue: 50.0       # Key frame that is within n meters from current pose will be considerd for scan-to-map optimization (when loop closure disabled)
+  surroundingKeyframeSearchRadiusValue: 25.0       # Key frame that is within n meters from current pose will be considerd for scan-to-map optimization (when loop closure disabled)
   surroundingKeyframeSearchNumValue: 50            # Submap size (when loop closure enabled)
   leafsizemapValue: 0.1                          # Leaf size for KDtree map. Old Value = 0.02 
   globalMapVisualizationSearchRadiusValue: 1000.0  # Key frames with in n meters will be visualized

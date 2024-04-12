@@ -6,4 +6,9 @@
   enableWheel: true
   enableLidar: true
   filterFreq: "l"
+  
+  # Covariance gains
+  lidarG: 10000
+  wheelG: 0.05
+  imuG: 0.1
 
