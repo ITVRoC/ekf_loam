@@ -309,16 +309,16 @@ public:
         Eigen::MatrixXd H(3,N_STATES), K(N_STATES,3);
 
         // measure model
-        hx = X.block(9,0,3,1);
+        hx = X.block(3,0,3,1);
         // wheel measurement
-        Y = imuMeasure.block(3,0,3,1);
+        Y = imuMeasure.block(6,0,3,1);
 
         // Jacobian of hx with respect to the states
         H = Eigen::MatrixXd::Zero(3,N_STATES);
-        H.block(0,9,3,3) = Eigen::MatrixXd::Identity(3,3);
+        H.block(0,3,3,3) = Eigen::MatrixXd::Identity(3,3);
 
         // covariance matrices
-        E = E_imu.block(3,3,3,3);
+        E = E_imu.block(6,6,3,3);
 
         // Kalman's gain
         S = H*P*H.transpose() + E;
