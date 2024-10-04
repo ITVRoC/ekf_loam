@@ -45,7 +45,7 @@
   nearestFeatureSearchSqDistValue: 25.0   # old value 25
 
   # Loop Clousure settings
-  enableLoopClosure: false             # Enable/Disable [true or false]
+  enableLoopClosure: true             # Enable/Disable [true or false]
   keyframeRadiuns: 7.0                # key frame that is within n meters from current pose will be considerd for loop closure
   keyframeNum: 25                     # 2n+1 number of history key frames will be fused into a submap for loop closure
   keyframeScore: 0.1                  # the smaller the better alignment - old 0.3  -- filter 0.1
