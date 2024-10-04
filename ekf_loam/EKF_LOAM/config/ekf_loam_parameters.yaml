@@ -1,0 +1,59 @@
+ #EKF-LOAM Parameters
+ ekf_loam:
+
+  # Folder to save PCD point cloud
+  fileDirectoryName: "/home/gilmar/catkin_ws/maps/capanema/"
+
+  # Frames
+  lidar_frame: "velodyne" # os1_sensor velodyne
+  inertial_frame: "os1_initial"
+  odom_frame: "os1_odom"
+  integrated_frame: "os1_integrated_odom"
+  mapped_frame: "aft_mapped"
+  init_frame: "os1_init"
+  lidar_integrated_frame: "lidar_integrated_odom"
+  base_frame: "base_link"
+
+  # Sensor settings
+  scanPeriod: 0.1                     # Scan Period in seconds.
+  imuQueLength: 100                   # Imu queue length
+
+  # Filter settings
+  enableFilter: true
+  enableFlatGround : false             # enable vertical filter for flat ground
+
+  # Segmentation settings
+  sensorMountAngle: 0.0
+  segmentValidPointNum: 5
+  segmentValidLineNum: 3
+  segmentThetaValue: 10.0              # Decrese this value may improve accuracy - old 10.0 -- filter 5.0
+
+  # Extract features settings
+  edgeThreshold: 0.1                  # Edge threshold
+  surfThreshold: 0.1                  # Surface threshold
+  edgeFeatureMin: 2                   # Minimum edge features numbers per subimage - old 2
+  surfFeatureMin: 4                   # Minimum surface features numbers per subimage - old 4
+  edgeFeatureMax: 40                  # Maximum edge features numbers per subimage - old 40
+  surfFeatureMax: 200                 # Maximum surface features numbers per subimage - old 200
+  
+  cornerDiv: 1                   # stop 3
+  cornerLessDiv: 1               # stop 3
+  surfDiv: 1                     # stop 10
+  surfLessDiv: 1                 # stop 10
+
+  # Corresponding features settings
+  nearestFeatureSearchSqDistValue: 25.0   # old value 25
+
+  # Loop Clousure settings
+  enableLoopClosure: false             # Enable/Disable [true or false]
+  keyframeRadiuns: 7.0                # key frame that is within n meters from current pose will be considerd for loop closure
+  keyframeNum: 25                     # 2n+1 number of history key frames will be fused into a submap for loop closure
+  keyframeScore: 0.1                  # the smaller the better alignment - old 0.3  -- filter 0.1
+
+  # Mapping settings  
+  mappingProcessInterval: 0.3                      # Mapping process interval - old 0.1
+  surroundingKeyframeSearchRadiusValue: 25.0       # Key frame that is within n meters from current pose will be considerd for scan-to-map optimization (when loop closure disabled)
+  surroundingKeyframeSearchNumValue: 50            # Submap size (when loop closure enabled)
+  leafsizemapValue: 0.1                          # Leaf size for KDtree map. Old Value = 0.02 
+  globalMapVisualizationSearchRadiusValue: 1000.0  # Key frames with in n meters will be visualized
+
