@@ -9,6 +9,6 @@
   
   # Covariance gains
   lidarG: 10000.0
-  wheelG: 0.005
+  wheelG: 0.05
   imuG: 0.1
 

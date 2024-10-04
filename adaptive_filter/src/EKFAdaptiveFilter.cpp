@@ -725,8 +725,8 @@ public:
                 dt_now = t_now-t_last;
                 t_last = t_now;
 
-                // prediction_stage(1/200.0);
-                prediction_stage(dt_now);
+                prediction_stage(1/200.0);
+                // prediction_stage(dt_now);
                 
                 // publish state
                 if (filterFreq == "p"){
