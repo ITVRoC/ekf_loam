@@ -12,7 +12,6 @@
 #ifndef _UTILITY_LIDAR_ODOMETRY_H_
 #define _UTILITY_LIDAR_ODOMETRY_H_
 
-
 #include <ros/ros.h>
 
 #include <sensor_msgs/Imu.h>
@@ -23,7 +22,8 @@
 
 #include "cloud_msgs/cloud_info.h"
 
-#include <opencv/cv.h>
+// #include <opencv/cv.h>
+#include <opencv2/opencv.hpp>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>

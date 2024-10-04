@@ -271,6 +271,7 @@ public:
     }
 
     void odomAftMappedHandler(const nav_msgs::Odometry::ConstPtr& odomAftMapped){
+
         double roll, pitch, yaw;
         geometry_msgs::Quaternion geoQuat = odomAftMapped->pose.pose.orientation;
         tf::Matrix3x3(tf::Quaternion(geoQuat.z, -geoQuat.x, -geoQuat.y, geoQuat.w)).getRPY(roll, pitch, yaw);
