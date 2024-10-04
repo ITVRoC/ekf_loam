@@ -2,10 +2,10 @@
  ekf_loam:
 
   # Folder to save PCD point cloud
-  fileDirectoryName: "/home/gilmarcoro/catkin_ws/maps/"
+  fileDirectoryName: "/home/gilmar/catkin_ws/maps/capanema/"
 
   # Frames
-  lidar_frame: "velodyne"
+  lidar_frame: "velodyne" # os1_sensor velodyne
   inertial_frame: "os1_initial"
   odom_frame: "os1_odom"
   integrated_frame: "os1_integrated_odom"
@@ -19,8 +19,8 @@
   imuQueLength: 100                   # Imu queue length
 
   # Filter settings
-  enableFilter: false
-  enableFlatGround : true             # enable vertical filter for flat ground
+  enableFilter: true
+  enableFlatGround : false             # enable vertical filter for flat ground
 
   # Segmentation settings
   sensorMountAngle: 0.0
@@ -51,9 +51,9 @@
   keyframeScore: 0.1                  # the smaller the better alignment - old 0.3  -- filter 0.1
 
   # Mapping settings  
-  mappingProcessInterval: 0.1                      # Mapping process interval - old 0.1
+  mappingProcessInterval: 0.3                      # Mapping process interval - old 0.1
   surroundingKeyframeSearchRadiusValue: 25.0       # Key frame that is within n meters from current pose will be considerd for scan-to-map optimization (when loop closure disabled)
   surroundingKeyframeSearchNumValue: 50            # Submap size (when loop closure enabled)
-  leafsizemapValue: 0.05                          # Leaf size for KDtree map. Old Value = 0.02 
+  leafsizemapValue: 0.1                          # Leaf size for KDtree map. Old Value = 0.02 
   globalMapVisualizationSearchRadiusValue: 1000.0  # Key frames with in n meters will be visualized
 

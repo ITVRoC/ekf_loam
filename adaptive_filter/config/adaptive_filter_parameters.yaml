@@ -4,11 +4,11 @@
   # Filter settings
   enableImu: true
   enableWheel: true
-  enableLidar: false
-  filterFreq: "w"
+  enableLidar: true
+  filterFreq: "l"
   
   # Covariance gains
-  lidarG: 10000.0
-  wheelG: 0.005
+  lidarG: 10000
+  wheelG: 0.05
   imuG: 0.1
 

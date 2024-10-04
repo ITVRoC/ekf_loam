@@ -546,22 +546,22 @@ public:
 		    }
 
             // ------ Alpha-Beta Filter ------
+            double alphaO = 0.5;  // 0.998
+            double betaO = 1 - alphaO;
+            double alphaP = 0.9; 
+            double betaP = 1 - alphaP; 
             if (enableFilter==true){
-                // position x, y and z
-                double alphaP = 0.9; 
-                double betaP = 1 - alphaP; 
+                // position x, y and z                
                 transformTobeMapped[3] = alphaP * transformTobeMapped[3] + betaP * transformAssMapped[3]; // seria o x
                 transformTobeMapped[4] = alphaP * transformTobeMapped[4] + betaP * transformAssMapped[4]; // seria o y
                 transformTobeMapped[5] = alphaP * transformTobeMapped[5] + betaP * transformAssMapped[5]; // seria o z
 
                 // Orientation - roll and pitch
-                double alphaO = 0.998; 
-                double betaO = 1 - alphaO;  
                 transformTobeMapped[0] = alphaO * transformTobeMapped[0] + betaO * imuPitchLast; // pitch
                 transformTobeMapped[2] = alphaO * transformTobeMapped[2] + betaO * imuRollLast; // roll
-	    }else{
-                transformTobeMapped[0] = 0.998 * transformTobeMapped[0] + 0.002 * imuPitchLast;
-		transformTobeMapped[2] = 0.998 * transformTobeMapped[2] + 0.002 * imuRollLast;                
+	         }else{
+                transformTobeMapped[0] = alphaO * transformTobeMapped[0] + betaO * imuPitchLast;
+		        transformTobeMapped[2] = alphaO * transformTobeMapped[2] + betaO * imuRollLast;                
             }
 
 		  }
